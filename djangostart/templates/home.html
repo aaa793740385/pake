@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>爬客网-开始你的爬虫之旅</title>
+    {% load staticfiles %}
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/footer.css' %}" rel="stylesheet">
+    <link href="{% static 'css/jum.css' %}" rel="stylesheet">
+    <link rel="shortcut icon"  href="../media/image/pake.ico"/>
+    <style type="text/css">
+        .bg{
+            background-repeat: no-repeat;
+            background-image: url("../media/image/jum.jpg");
+            background-size: cover;
+            background-attachment: fixed;}
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">爬客网</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">首页</a></li>
+                <li><a {% if user.id is null %}
+                       onclick="login()" href="#"
+                       {% else %}
+                       href="/assignment/"
+                       {% endif %}>任务管理</a></li>
+                <li><a {% if user.id is null %}
+                       onclick="login()" href="#"
+                       {% else %}
+                       href="/crawl/"
+                       {% endif %}>商品速爬</a></li>
+                <li><a {% if user.id is null %}
+                       onclick="login()" href="#"
+                       {% else %}
+                       href="/cloudmusic/"
+                       {% endif %}>明星趣爬</a></li>
+                <li><a href="/feedback/">用户反馈</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.id is null %}
+                <li><a onclick="login()" href="#"><span class="glyphicon glyphicon-user"></span>&nbsp;登陆</a></li>
+                {% else %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;{{ user.username }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/personal/">个人中心</a></li>
+                        <li><a href="/logout/">退出登陆</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner" role="listbox">
+        <div class="item active row bg" style="height: 600px;">
+            <div class="container">
+                <div class="carousel-caption" style="height: 60%">
+                    <h1>Pake爬客网</h1>
+                    <p>分布式智能化爬虫系统&nbsp;<code>从此告别写代码</code></p>
+                    <a style="color: white" href="#begin"><input type="button" value="开始你的爬虫之旅" class="mybtn btn btn-lg" style="outline: none" src="#begin" ></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr class="featurette-divider">
+<div class="container marketing">
+    <div class="row">
+        <div class="col-lg-4">
+            <img class="img" src="../media/image/commodity.png" alt="Generic placeholder image" width="140" height="140">
+            <h2>商品速爬</h2>
+            <p>采用redis-scrapy分布式爬虫，具有模拟多浏览器、多ip代理、延时爬取、带cookie请求等多项应对反爬虫措施，主要用于爬取淘宝、天猫等流行电商商品信息</p>
+            <a name="begin" type="button" class="btn-primary btn btn-lg" {% if user.id is null %}
+               onclick="login()" href="#"
+               {% else %}
+               onclick="location='/crawl/'"
+               {% endif %}>点击进入
+            </a>
+        </div>
+        <div class="col-lg-4">
+            <img class="img" src="../media/image/task.png" alt="Generic placeholder image" width="140" height="140">
+            <h2>任务管理</h2><br>
+            <p>管理您的爬虫任务列表，可以查看具体爬取信息，还可以生成价格统计图，地区统计图，导出excel等功能</p>
+            <a type="button" class="btn-primary btn btn-lg" {% if user.id is null %}
+               onclick="login()" href="#"
+               {% else %}
+               href="/assignment/"
+               {% endif %}>点击进入</a>
+        </div>
+        <div class="col-lg-4">
+            <img class="img-circle" src="../media/image/start.png" alt="Generic placeholder image" width="140" height="140">
+            <h2>明星趣爬</h2><br>
+            <p>想知道您喜欢的明星最喜欢唱的歌词词语是哪几个吗，来这里试试吧O(∩_∩)O</p>
+            <a type="button" class="btn-primary btn btn-lg" {% if user.id is null %}
+               onclick="login()" href="#"
+               {% else %}
+               href="/cloudmusic/"
+               {% endif %}>点击进入</a>
+        </div>
+    </div>
+    <hr class="featurette-divider">
+</div>
+<div id="loginModel" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">
+                    <span class="glyphicon glyphicon-user"></span>用户登陆
+                </h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>用户名：</label>
+                    <input type="text" id="username" placeholder="username"
+                           class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>密码：</label>
+                    <input type="password" id="password" placeholder="password"
+                           class="form-control" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- 验证信息 -->
+                <span id="loginMessage" class="glyphicon"></span>
+                <button type="button" id="loginBtn" class="btn btn-success">
+                    <span class="glyphicon glyphicon-user"></span> 登陆
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+    <div class="container">
+        <p class="text-muted">联系我们：邮箱793740385@qq.com &nbsp;&nbsp;&nbsp;&nbsp;制作人：姜发建、秦俊涛、王博 &nbsp;&nbsp;&nbsp;&nbsp;服务器时间：<span id="time"></span></p>
+    </div>
+</footer>
+</body>
+<script type="text/javascript" src="{% static 'js/serveTime.js' %}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script
+        src="{% static 'js/bootstrap.min.js' %}"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script
+        src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script
+        src="https://cdn.bootcss.com/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
+<script type="text/javascript">
+    function login() {
+        $('#loginModel').modal({
+            show:true,
+        });
+        $('#loginBtn').click(function(){
+            var username = $('#username').val();
+            var password = $('#password').val();
+            if(username !='' && password!=''){
+                $.ajax({
+                    type : "POST",
+                    dataType : "text",
+                    url : "/login/",
+                    data : {username: username,password: password},
+                    headers:{ "X-CSRFtoken":$.cookie("csrftoken")},
+                    success : function(result) {
+                        if(result == 'success_login'){
+                            location.reload();
+                        }else if(result == 'not_activated'){
+                            $('#loginMessage').hide().html('<label class="label label-danger">用户未激活</label>').show(300);
+                        }else if(result == 'error'){
+                            $('#loginMessage').hide().html('<label class="label label-danger">用户或密码错误</label>').show(300);
+                        }
+                    },
+                    error : function() {
+                        $('#loginMessage').hide().html('<label class="label label-danger">未知错误</label>').show(300);
+                    }
+                });
+            }else{
+                $('#loginMessage').hide().html('<label class="label label-danger">用户或密码为空</label>').show(300);
+            }
+        });
+    }
+
+    $(function () {
+        document.onkeydown = function (event) {
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            if ( e && e.keyCode == 13) {
+                $('#loginBtn').click();
+            }
+        };
+    });
+</script>
+</html>

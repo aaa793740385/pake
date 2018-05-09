@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>开始爬虫</title>
+    {% load staticfiles %}
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+    <link href="{% static 'css/begin_task.css' %}" rel="stylesheet">
+    <link href="{% static 'css/footer.css' %}" rel="stylesheet">
+    <link rel="shortcut icon"  href="../media/image/pake.ico"/>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">爬客网</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">首页</a></li>
+                <li><a href="/assignment/">任务管理</a></li>
+                <li class="active"><a href="#">商品速爬</a></li>
+                <li><a href="/cloudmusic/">明星趣爬</a></li>
+                <li><a href="/feedback/">用户反馈</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;{{ user.username }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/personal/">个人中心</a></li>
+                        <li><a href="/logout/">退出登陆</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<div class="container">
+    <div class="panel">
+        <form class="form-begin">
+            <h2 class="form-begin-heading"><b>发布爬虫任务</b></h2><br><br>
+            <label for="name" style="font-size: 18px">任务名称<span style="color:red">*</span></label>
+            <div class="input-group">
+                <span class="input-group-addon">name</span>
+                <input type="text" class="form-control" placeholder="10个字符以内" id="name" required autofocus>
+            </div>
+            <br>
+            <label for="general" style="font-size: 18px">关键词<span style="color:red">*</span></label>
+            <div class="input-group">
+                <span class="input-group-addon">general</span>
+                <input type="text" class="form-control" placeholder="10个字符以内" id="general" required>
+            </div>
+            <br>
+            <label style="font-size: 18px">备注</label>
+            <div>
+                <textarea id="remark" class="form-control" placeholder="50个字符以内"></textarea>
+            </div>
+            <br>
+            <p>任务说明：根据输入的关键词，在天猫，淘宝等电商平台爬取相关商品信息</p><br>
+            <div class="btn-group btn-group-justified" role="group">
+                <div class="btn-group" role="group">
+                    <input  id="taskBtn" type="button" class="btn btn-primary btn-lg" onclick="submitTask()" value="发布任务"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<footer class="footer">
+    <div class="container">
+        <p class="text-muted">联系我们：邮箱793740385@qq.com &nbsp;&nbsp;&nbsp;&nbsp;制作人：姜发建、秦俊涛、王博</p>
+    </div>
+</footer>
+</body>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script
+        src="{% static 'js/bootstrap.min.js' %}"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script
+        src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script
+        src="https://cdn.bootcss.com/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
+<script type="text/javascript">
+    function submitTask(){
+        var name = document.getElementById("name").value;
+        var general = document.getElementById("general").value;
+        var remark = document.getElementById("remark").value;
+        var taskBtn = document.getElementById("taskBtn");
+        if(name != "" && general != ""){
+            if(name.length > 10){
+                alert("任务名称过长，请控制在10个字符以内~~");
+                return ;
+            }else if(general.length > 10){
+                alert("关键词过长，请控制在10个字符以内~~");
+                return ;
+            }else if(remark.length > 30){
+                alert("备注过长，请控制在50个字符以内~~");
+                return ;
+            }
+            $.ajax({
+                type : "GET",
+                dataType : "text",
+                url : "/startCrawl/",
+                data : {name:name,general:general,remark:remark},
+                beforeSend:function (){
+                    taskBtn.setAttribute("disabled","disabled");
+                    taskBtn.setAttribute("value","正在提交");
+                },
+                success : function() {
+                    alert("成功提交");
+                    window.location.href='/assignment/';
+                },
+                error : function() {
+                    alert("异常");
+                    taskBtn.removeAttribute("disabled");
+                    taskBtn.setAttribute("value","发布任务");
+                }
+            });
+        }
+        else{
+            alert("任务名称或者关键词不能为空");
+        }
+    }
+</script>
+</html>

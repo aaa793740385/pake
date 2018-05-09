@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>明星词频统计</title>
+    {% load staticfiles %}
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/footer.css' %}" rel="stylesheet">
+    <link href="{% static 'css/begin_task.css' %}" rel="stylesheet">
+    <link rel="shortcut icon"  href="../media/image/pake.ico"/>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">爬客网</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">首页</a></li>
+                <li><a href="/assignment/">任务管理</a></li>
+                <li><a href="/crawl/">商品速爬</a></li>
+                <li class="active"><a href="#">明星趣爬</a></li>
+                <li><a href="/feedback/">用户反馈</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;{{ user.username }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/personal/">个人中心</a></li>
+                        <li><a href="/logout/">退出登陆</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<div class="container">
+    <div class="panel">
+        <form class="form-begin">
+            <h2 class="form-begin-heading"><b>明星词频统计</b></h2><br><br>
+            <label style="font-size: 18px">明星名称或编号<span style="color:red">*</span></label>
+            <div class="input-group">
+                <span class="input-group-addon">name&id</span>
+                <input type="text" class="form-control" id="star_id" required autofocus>
+            </div>
+            <br>
+            <p class="visible-xs-block">因页面显示问题，移动端用户暂不提供该功能，敬请谅解</p>
+            <p class="hidden-xs">任务说明：如果输入明星名称无法生成数据，可以进入<a href="http://music.163.com/#/discover/artist" target="_blank">网易云音乐歌手页面</a>,进入你喜欢的歌手的专辑页面，通过该页面的url上的id编号来爬取该歌手的词频统计。比如张惠妹的id编号为10559，陈奕迅的id编号为2116。</p><br>
+            <div class="btn-group btn-group-justified" role="group">
+                <div class="btn-group" role="group">
+                    <input id="taskBtn" type="button" class="btn btn-primary btn-lg hidden-xs" onclick="submitTask()" value="发布任务"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<footer class="footer">
+    <div class="container">
+        <p class="text-muted">联系我们：邮箱793740385@qq.com &nbsp;&nbsp;&nbsp;&nbsp;制作人：姜发建、秦俊涛、王博 &nbsp;&nbsp;&nbsp;&nbsp;服务器时间：<span id="time"></span></p>
+    </div>
+</footer>
+<div id = "alertModel" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p id="text"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</body>
+<script type="text/javascript" src="{% static 'js/serveTime.js' %}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script
+        src="{% static 'js/bootstrap.min.js' %}"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script
+        src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script
+        src="https://cdn.bootcss.com/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
+<script type="text/javascript">
+    function submitTask(){
+        var star_id = document.getElementById("star_id");
+        var btn = document.getElementById("taskBtn");
+        if(star_id != ""){
+            $.ajax({
+                type : "GET",
+                dataType : "text",
+                url : "/musicCrawl/",
+                data : {star_id:star_id.value},
+                beforeSend:function (){
+                    $('#text').html("数据生成中，请稍作等待O(∩_∩)O");
+                    btn.setAttribute("disabled","disabled");
+                    $('#alertModel').modal({
+                        show:true,
+                    });
+                },
+                success : function() {
+                    $('#alertModel').modal({
+                        show:true,
+                    });
+                    $('#text').html("数据生成完毕O(∩_∩)O");
+                    star_id.setAttribute("disabled","disabled");
+                    btn.setAttribute("class","btn btn-success btn-lg");
+                    btn.removeAttribute("disabled");
+                    btn.setAttribute("onclick","window.open(\"/static/bars/bar{{user.id}}.html\");");
+                    btn.setAttribute("value","查看结果");
+                },
+                error : function() {
+                    $('#alertModel').modal({
+                        show:true,
+                    });
+                    btn.removeAttribute("disabled");
+                    $('#text').html("生成数据失败~~");
+                }
+            });
+        }
+        else{
+            alert("明星名称或编号不能为空~~");
+        }
+    }
+</script>
+</html>

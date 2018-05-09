@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>爬客网-个人中心</title>
+    {% load staticfiles %}
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+    <link href="{% static 'css/footer.css' %}" rel="stylesheet">
+    <link rel="shortcut icon"  href="../media/image/pake.ico"/>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">爬客网</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">首页</a></li>
+                <li><a href="/assignment/">任务管理</a></li>
+                <li><a href="/crawl/">商品速爬</a></li>
+                <li><a href="/cloudmusic/">明星趣爬</a></li>
+                <li><a href="/feedback/">用户反馈</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;{{ user.username }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="active"><a href="/personal/">个人中心</a></li>
+                        <li><a href="/logout/">退出登陆</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<div class="container">
+    <div class="jumbotron">
+        <h1><img src="{{ MEDIA_URL }}{{ inf.image }}" width="140" height="140" class="img-circle">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.username }}的个人中心</h1>
+        <p class="lead"></p>
+        <h3>{{ inf.content }}</h3>
+    </div>
+
+    <div class="row marketing">
+        <div class="col-lg-6">
+            <h3><strong>基本资料</strong></h3>
+            <p>账户id：{{ user.id }}</p>
+            <p>真实姓名：{{ inf.true_name }}</p>
+            <p>性别：{{ inf.sex }}</p>
+            <p>创建时间：{{ user.date_joined }}</p>
+            <p>最后登陆时间：{{ user.last_login }}</p>
+            <p><a id="reviewKey" onclick="reviseKey()" href="#">修改密码</a></p>
+        </div>
+        <div class="col-lg-6">
+            <h3><strong>爬客生涯</strong></h3>
+            <p>累计发布任务：{{task_total}}次</p>
+            <p>累计爬取数量：{{detail_total}}次</p>
+        </div>
+    </div>
+</div>
+<div id="reviseKeyModel" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">
+                    <span class="glyphicon glyphicon-user"></span>密码修改
+                </h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="password" id="newPassword" placeholder="输入新密码"
+                           class="form-control" />
+                </div>
+                <div class="form-group">
+                    <input type="password" id="rePassword" placeholder="确认新密码"
+                           class="form-control" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- 验证信息 -->
+                <span id="reviseKeyMessage" class="glyphicon"></span>
+                <button type="button" id="reviseKeyBtn" class="btn btn-success">
+                    <span class="glyphicon glyphicon-user"></span> Submit
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+    <div class="container">
+        <p class="text-muted">联系我们：邮箱793740385@qq.com &nbsp;&nbsp;&nbsp;&nbsp;制作人：姜发建、秦俊涛、王博 &nbsp;&nbsp;&nbsp;&nbsp;服务器时间：<span id="time"></span></p>
+    </div>
+</footer>
+</body>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script
+        src="{% static 'js/bootstrap.min.js' %}"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script
+        src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script
+        src="https://cdn.bootcss.com/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
+<script type="text/javascript" src="{% static 'js/serveTime.js' %}"></script>
+<script type="text/javascript">
+    function reviseKey() {
+        $('#reviseKeyModel').modal({
+            show:true,
+        });
+        $('#reviseKeyBtn').click(function(){
+            if($('#newPassword').val()!="" && $('#newPassword').val() == $('#rePassword').val()){
+                $.ajax({
+                    type : "POST",
+                    dataType : "text",
+                    url : "/revisekey/",
+                    data : {password:$('#newPassword').val()},
+                    headers:{ "X-CSRFtoken":$.cookie("csrftoken")},
+                    success : function(result) {
+                        if(result=="success"){
+                            alert("密码修改成功！");
+                            $('#reviseKeyModel').modal('hide');
+                        }
+
+                    },
+                    error : function() {
+                        alert("异常");
+                    }
+                });
+            }
+            else{
+                $('#reviseKeyMessage').hide().html('<label class="label label-danger">输入为空或者不相同！</label>').show(300);
+            }
+        });
+    }
+    $(function () {
+        document.onkeydown = function (event) {
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            if ( e && e.keyCode == 13) {
+                $('#reviseKeyBtn').click();
+            }
+        };
+    });
+</script>
+</html>

@@ -1,0 +1,68 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+}
+
+.form-begin {
+  max-width: 430px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-begin .form-signin-heading,
+.form-begin .checkbox {
+  margin-bottom: 10px;
+  text-align:center;
+}
+.form-begin .checkbox {
+  font-weight: normal;
+}
+.form-begin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 15px;
+}
+.form-begin .form-control:focus {
+  z-index: 2;
+}
+.form-begin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+label.font{
+  font-size: 22px
+}
+.ui-select{
+    width:75%;
+    height:63px;
+    line-height:63px;
+    background-color:#ECAFB4;
+    color:#fff;
+    padding:0 30px;
+    text-align: left;
+    position: relative;
+}
+select{
+    width:80%;
+    height:30px;
+    line-height:33px;
+    opacity: 0;
+    position: absolute;
+    top:0;
+    left:0;
+}
+/*小三角图标*/
+.icon-down{
+    border-radius: 15px;
+    display: inline-block;
+    width:30px;
+    height:16px;
+    background: url("../image/newWap/wapIcons.png") -168px -96px no-repeat;
+}
+
+
