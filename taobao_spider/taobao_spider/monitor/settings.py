@@ -20,5 +20,5 @@ STATS_KEYS = ['downloader/request_count', 'downloader/response_count','downloade
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 REDIS_DB = 0
-APP_HOST = '127.0.0.1'
+APP_HOST = '0.0.0.0'
 APP_PORT = 8080
