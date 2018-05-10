@@ -68,7 +68,7 @@
                 <textarea id="remark" class="form-control" placeholder="50个字符以内"></textarea>
             </div>
             <br>
-            <p>任务说明：根据输入的关键词，在天猫，淘宝等电商平台爬取相关商品信息</p><br>
+            <p>任务说明：根据输入的商品关键词，在天猫，淘宝等电商平台爬取相关商品信息</p><br>
             <div class="btn-group btn-group-justified" role="group">
                 <div class="btn-group" role="group">
                     <input  id="taskBtn" type="button" class="btn btn-primary btn-lg" onclick="submitTask()" value="发布任务"/>
@@ -79,10 +79,11 @@
 </div>
 <footer class="footer">
     <div class="container">
-        <p class="text-muted">联系我们：邮箱793740385@qq.com &nbsp;&nbsp;&nbsp;&nbsp;制作人：姜发建、秦俊涛、王博</p>
+        <p class="text-muted">联系我们：邮箱793740385@qq.com &nbsp;&nbsp;&nbsp;&nbsp;制作人：姜发建、秦俊涛、王博 &nbsp;&nbsp;&nbsp;&nbsp;服务器时间：<span id="time"></span>&nbsp;&nbsp;<a href="https://github.com/aaa793740385/pake/tree/master" target="_blank">&lt;代码开源&gt;</a></p>
     </div>
 </footer>
 </body>
+<script type="text/javascript" src="{% static 'js/serveTime.js' %}"></script>
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script
         src="{% static 'js/bootstrap.min.js' %}"
@@ -118,9 +119,15 @@
                     taskBtn.setAttribute("disabled","disabled");
                     taskBtn.setAttribute("value","正在提交");
                 },
-                success : function() {
-                    alert("成功提交");
-                    window.location.href='/assignment/';
+                success : function(result) {
+                    if(result == 'success'){
+                        alert("成功提交，爬虫任务已进入队列中，正在开始为您爬取中~~");
+                        window.location.href='/assignment/';
+                    }
+                    else if(result == 'limited time'){
+                        alert("距离上次提交时间未超过5分钟，请过段时间再试");
+                        window.location.href='/assignment/';
+                    }
                 },
                 error : function() {
                     alert("异常");

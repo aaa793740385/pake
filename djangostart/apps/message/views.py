@@ -114,14 +114,24 @@ def startCrawl(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/')
     if request.is_ajax():
-        name = str(request.GET.get('name'))
-        general = str(request.GET.get('general'))
-        remark = str(request.GET.get('remark'))
-        time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-        models.Task.objects.create(user=request.user.id, name=name, general=general, remark=remark, time=time)
-        task = models.Task.objects.latest('id')
-        InsertRedis.inserintotc("http://taobao.com/", 1, task)
-        return HttpResponse('')
+        import time
+        oldtime = models.UserInformation.objects.get(pk=request.user.id).crawl_time
+        newtime = time.mktime(datetime.now().timetuple())
+        print(float(newtime)-float(oldtime))
+        if float(newtime)-float(oldtime) >= 300:
+            name = str(request.GET.get('name'))
+            general = str(request.GET.get('general'))
+            remark = str(request.GET.get('remark'))
+            createTime = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            models.Task.objects.create(user=request.user.id, name=name, general=general, remark=remark, time=createTime)
+            user = models.UserInformation.objects.get(pk=request.user.id)
+            user.crawl_time = str(newtime)
+            user.save()
+            task = models.Task.objects.latest('id')
+            InsertRedis.inserintotc("http://taobao.com/", 1, task)
+            return HttpResponse('success')
+        else:
+            return HttpResponse('limited time')
 
 
 def taskDetail(request):

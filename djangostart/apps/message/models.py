@@ -12,6 +12,7 @@ class UserInformation(models.Model):
     content = models.TextField(max_length=100, default='这个人很懒，什么都没留下~~~')
     sex = models.CharField(max_length=10, default='女')
     image = models.CharField(max_length=100, default='image/girl.jpg')
+    crawl_time = models.CharField(max_length=100, default='2018-05-09 23:15:38.615000')
 
     def __unicode__(self):
         return self.true_name
