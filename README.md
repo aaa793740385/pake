@@ -47,19 +47,33 @@ scrapy-redis
 
 ### 执行步骤:
 第一步：启动mongodb服务
+
   mongod
+  
 第二步：启动redis服务
+
   redis-server.exe redis.windows.conf
+  
   redis-cli.exe -h 127.0.0.1 -p 6379
+  
 第三步:部署Master端
+
   scrapy crawl taobaoMaster
+  
 第四步：部署Slave端
+
   scrapy crawl taobao
+  
 第五步：部署可视化端（django）
+
   python manage.py runserver
+  
   访问http://ip:port/(默认：http://localhost:8000/)
+  
 第六步（可选）：部署爬虫监控端
+
   python app.py
+  
   访问http://ip:port/show(默认：http://localhost:8080/show)
   
 其他步骤包括数据迁移，以及修改mysql和mongodb账号密码这我就不一一说明了
