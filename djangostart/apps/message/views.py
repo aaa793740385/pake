@@ -124,11 +124,11 @@ def startCrawl(request):
             remark = str(request.GET.get('remark'))
             createTime = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             models.Task.objects.create(user=request.user.id, name=name, general=general, remark=remark, time=createTime)
+            task = models.Task.objects.latest('id')
+            InsertRedis.inserintotc("http://taobao.com/", 1, task)
             user = models.UserInformation.objects.get(pk=request.user.id)
             user.crawl_time = str(newtime)
             user.save()
-            task = models.Task.objects.latest('id')
-            InsertRedis.inserintotc("http://taobao.com/", 1, task)
             return HttpResponse('success')
         else:
             return HttpResponse('limited time')
