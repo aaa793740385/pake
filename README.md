@@ -20,7 +20,49 @@
 1、设计要求分析：不同用户能够有自己相对应的账号进入爬客网的网页
 （包括移动端），进入网页能够选择1：任务发布、2：查看任务3：导出数据4：分析数据生成可视化图表5：数据要求去重（质量高）
 2、系统功能：爬客网在线支持人数合理，系统并发要尽量满足用户需求
-3、原理方案设计：模拟访问淘宝、天猫电商平台，输入关键词生成url进行url解析，生成的店铺入口运用redis分发发给不同的Slaver进行爬取任务，爬取好数据存储在mongodb然后前端进行提取数据，并进行数据的解析生成可视化的图表，在前端展示给用户看
+3、原理方案设计：模拟访问淘宝、天猫电商平台，输入关键词生成url进行url解析，生成的店铺入口运用redis分发发给不同的Slave进行爬取任务，爬取好数据存储在mongodb然后前端进行提取数据，并进行数据的解析生成可视化的图表，在前端展示给用户看
+
+
+## 环境需求
+### 环境
+Python2.7 + mysql + mongodb + anaconda + redis
+
+### 组件
+scrapy  
+requests 
+chardet 
+web.py 
+sqlalchemy 
+gevent 
+psutil 
+django==1.11 (注意版本号，高于1.11的版本可能不支持python2.7)
+redis 
+python-redis 
+pymongo 
+twisted 
+scrapy-redis
+
+......
+还有好多好多，（包括mysql的支持模块、生成地图的模块等等）大家看情况报什么错就打什么包吧
+
+### 执行步骤:
+第一步：启动mongodb服务
+  mongod
+第二步：启动redis服务
+  redis-server.exe redis.windows.conf
+  redis-cli.exe -h 127.0.0.1 -p 6379
+第三步:部署Master端
+  scrapy crawl taobaoMaster
+第四步：部署Slave端
+  scrapy crawl taobao
+第五步：部署可视化端（django）
+  python manage.py runserver
+  访问http://ip:port/(默认：http://localhost:8000/)
+第六步（可选）：部署爬虫监控端
+  python app.py
+  访问http://ip:port/show(默认：http://localhost:8080/show)
+  
+其他步骤包括数据迁移，以及修改mysql和mongodb账号密码这我就不一一说明了
 
 
 ## 总结
