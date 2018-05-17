@@ -59,6 +59,7 @@
                 <th>创建时间</th>
                 <th>任务详情</th>
                 <th>备注</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
@@ -72,6 +73,8 @@
                             value="{{i.id}}" onclick="taskDetail(this.value)">查看</button></td>
                 <td><button type="button" class="btn btn-default" style="padding:4px 8px;"
                             value="{{i.remark}}" onclick="remarkDetail(this.value)">查看</button></td>
+                <td><button type="button" class="close" style="padding:4px 8px; float:none"
+                            value="{{i.id}}" onclick="deleteTask(this.value)">&times;</button></td>
             </tr>
             {% endfor %}
             </tbody>
@@ -170,10 +173,11 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <p id="text">数据生成中，请稍作等待O(∩_∩)O</p>
+                <p id="text"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button  class="btn btn-warning hidden" id="alertBtn">确定</button>
+                <button  class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -222,6 +226,34 @@
             show:true,
         });
         $('#remarks').html(val);
+    }
+
+    function deleteTask(val){
+        var alertBtn = document.getElementById("alertBtn");
+        alertBtn.setAttribute("class","btn btn-warning");
+        $('#text').html("警告：你确定要删除这条爬虫任务吗？");
+        $('#alertModel').modal({
+            show:true,
+        });
+        $('#alertBtn').click(function(){
+            $.ajax({
+                type : "GET",
+                dataType : "text",
+                url : "/deleteTask/",
+                data : {task_id:val},
+                success : function() {
+                    alertBtn.setAttribute("class","btn btn-warning hidden");
+                    alert("删除成功");
+                    $('#alertModel').hide();
+                    window.location.reload();
+                },
+                error : function() {
+                    alertBtn.setAttribute("class","btn btn-warning hidden");
+                    alert("异常");
+                    $('#alertModel').hide();
+                }
+            });
+        });
     }
 
     function taskDetail(val){

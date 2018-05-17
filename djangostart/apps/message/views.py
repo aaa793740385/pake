@@ -86,6 +86,7 @@ def reviseKey(request):
         u.set_password(newpassword)
         u.save()
         return HttpResponse('success')
+        # return HttpResponse('limited revise')
 
 
 def assignment(request):
@@ -108,6 +109,18 @@ def crawl(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/')
     return render(request, 'crawl.html')
+
+
+def deleteTask(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/')
+    task_id = request.GET.get('task_id')
+    print(task_id)
+    task = models.Task.objects.get(pk=task_id)
+    task.delete()
+    my_getDetail = db.taobao
+    my_getDetail.remove({'task_id': task_id})
+    return HttpResponse('success')
 
 
 def startCrawl(request):

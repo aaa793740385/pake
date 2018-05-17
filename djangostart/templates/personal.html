@@ -132,6 +132,9 @@
                         if(result=="success"){
                             alert("密码修改成功！");
                             $('#reviseKeyModel').modal('hide');
+                        }else if(result=="limited revise"){
+                            alert("演示期间暂停修改密码！");
+                            $('#reviseKeyModel').modal('hide');
                         }
 
                     },

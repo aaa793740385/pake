@@ -29,7 +29,8 @@ DEBUG = True
 ALLOWED_HOSTS = [u'localhost',
                  u'127.0.0.1',
                  u'pake.s1.natapp.cc',
-                 u'120.79.204.134']
+                 u'120.79.204.134',
+                 u'www.dwllm.top']
 
 
 # Application definition
