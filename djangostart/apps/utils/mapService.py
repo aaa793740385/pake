@@ -62,7 +62,7 @@ def mapMaking(task_id):
     geo.height = 800
     geo.width = 1500
     attr, value = geo.cast(data)
-    geo.add("", attr, value, visual_range=[0, 200], maptype='china', visual_text_color="#fff",
+    geo.add("", attr, value, visual_range=[0, 60], maptype='china', visual_text_color="#fff",
             symbol_size=10, is_visualmap=True)
     geo.render("static/maps/map" + task_id + ".html")  # 生成html文件
 

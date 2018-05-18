@@ -58,6 +58,8 @@ def pricePieMaking(task_id,start_range,end_range):
 
     # 生成图表
     pie = Pie(u"商品价格范围分布图")
+    pie.width = 1200
+    pie.height = 800
     attr, value = pie.cast(list2)
     pie.add("", attr, value, is_label_show=True)
     # pie.show_config()
