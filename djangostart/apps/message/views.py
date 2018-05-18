@@ -73,8 +73,10 @@ def personal(request):
     detail_total = my_getDetail.find({"task_id": {"$in": task_ids}}).count()
     task_total = len(task_ids)
     information = models.UserInformation.objects.get(pk=id)
+    musics_total = models.CloudMusicInformation.objects.filter(user_id=request.user.id).count()
+    cloudMusics = models.CloudMusicInformation.objects.filter(user_id=request.user.id).order_by("-id")[:3]
     return render(request, 'personal.html',
-                  {"inf": information, "task_total": task_total, "detail_total": detail_total})
+                  {"inf": information, "task_total": task_total, "detail_total": detail_total, "cloudMusics": cloudMusics,"musics_total":musics_total})
 
 
 def reviseKey(request):
@@ -128,10 +130,11 @@ def startCrawl(request):
         return HttpResponseRedirect('/')
     if request.is_ajax():
         import time
-        oldtime = models.UserInformation.objects.get(pk=request.user.id).crawl_time
         newtime = time.mktime(datetime.now().timetuple())
-        print(float(newtime)-float(oldtime))
-        if float(newtime)-float(oldtime) >= 300:
+        if request.user.is_superuser == 0:
+            oldtime = models.UserInformation.objects.get(pk=request.user.id).crawl_time
+            print(float(newtime) - float(oldtime))
+        if request.user.is_superuser == 1 or float(newtime) - float(oldtime) >= 300:
             name = str(request.GET.get('name'))
             general = str(request.GET.get('general'))
             remark = str(request.GET.get('remark'))
@@ -170,6 +173,26 @@ def cloudMusic(request):
 
 def feedback(request):
     return render(request, 'feedBack.html')
+
+
+def checkFeedback(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/')
+    list = models.Feedback.objects.filter()
+    return render(request, 'checkFeedback.html', {"list": list})
+
+
+def submitFeedback(request):
+    content = request.GET.get('content')
+    create_time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    models.Feedback.objects.create(content=content, time=create_time)
+    return HttpResponse('success')
+
+
+def deleteFeedback(request):
+    id = request.GET.get('id')
+    models.Feedback.objects.get(pk=id).delete()
+    return HttpResponse('success')
 
 
 def musicCrawl(request):
@@ -215,12 +238,6 @@ def priceRange(request):
     start_range = request.GET.get("start_range")
     end_range = request.GET.get("end_range")
     pricePieMaking(task_id, start_range, end_range)
-    return HttpResponse('success')
-
-
-def submitFeedback(request):
-    content = request.GET.get('content')
-    models.Feedback.objects.create(content=content)
     return HttpResponse('success')
 
 

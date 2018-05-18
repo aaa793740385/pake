@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^crawl/$', views.crawl, name='crawl'),
     url(r'^cloudmusic/$', views.cloudMusic, name='cloudmusic'),
     url(r'^feedback/$', views.feedback, name='feedback'),
+    url(r'^checkFeedback/$', views.checkFeedback, name='checkFeedback'),
 ]

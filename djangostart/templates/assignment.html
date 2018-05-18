@@ -32,7 +32,14 @@
                 <li class="active"><a href="#">任务管理</a></li>
                 <li><a href="/crawl/">商品速爬</a></li>
                 <li><a href="/cloudmusic/">明星趣爬</a></li>
+                {% if user.is_superuser == 0%}
                 <li><a href="/feedback/">用户反馈</a></li>
+                {% else %}
+                <li><a href="/checkFeedback/">查看反馈</a></li>
+                {% endif %}
+                {% if user.is_superuser == 1%}
+                <li><a href="http://120.79.204.134:8080/show" target="_blank">数据监控</a></li>
+                {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">

@@ -33,6 +33,17 @@ class Task(models.Model):
 
 class Feedback(models.Model):
     content = models.TextField(null=False)
+    time = models.CharField(max_length=32, null=True)
+    pass
+
+
+class CloudMusicInformation(models.Model):
+    user_id = models.IntegerField(null=False)
+    star_id = models.IntegerField(null=False)
+    star_name = models.CharField(max_length=32, null=False)
+
+    def __unicode__(self):
+        return self.user_id
     pass
 
 

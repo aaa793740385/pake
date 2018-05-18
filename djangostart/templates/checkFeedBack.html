@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>爬客网-用户反馈</title>
+    <title>爬客网-查看反馈</title>
     {% load staticfiles %}
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">
@@ -31,24 +31,44 @@
                 <li><a href="/assignment/">任务管理</a></li>
                 <li><a href="/crawl/">商品速爬</a></li>
                 <li><a href="/cloudmusic/">明星趣爬</a></li>
-                <li class="active"><a href="#">用户反馈</a></li>
+                <li class="active"><a href="/checkFeedback/">查看反馈</a></li>
+                <li><a href="http://120.79.204.134:8080/show" target="_blank">数据监控</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;{{ user.username }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/personal/">个人中心</a></li>
+                        <li><a href="/logout/">退出登陆</a></li>
+                    </ul>
+                </li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </nav>
 <div class="container">
-    <div class="panel">
-        <form class="form-begin">
-            <h2 class="form-begin-heading"><b>用户反馈</b></h2><br><br>
-            <textarea id="content" class="form-control" rows="3" placeholder="反馈内容，100字以内"></textarea>
-            <br>
-            <p>注：十分感谢您能够抽出宝贵的时间与我们一起改进爬客网，您提交的反馈内容对我们十分重要，我们将会认真对待每一条反馈信息并不断改进自己。</p><br>
-            <div class="btn-group btn-group-justified" role="group">
-                <div class="btn-group" role="group">
-                    <input id="feedbackBtn" type="button" class="btn btn-primary btn-lg" onclick="feedback()" value="提交反馈"/>
-                </div>
-            </div>
-        </form>
+    <h2 class="sub-header">用户反馈</h2><br>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>反馈内容</th>
+                <th>反馈时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in list %}
+            <tr>
+                <td>{{i.content}}</td>
+                <td>{{i.time}}</td>
+                <td><button class="close" style="padding:4px 8px; float:none"
+                            value="{{i.id}}" onclick="deleteFeedback(this.value)">&times;</button></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 <footer class="footer">
@@ -68,32 +88,18 @@
 <script
         src="https://cdn.bootcss.com/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
 <script type="text/javascript">
-    function feedback(){
-        var content = document.getElementById("content").value;
-        var feedbackBtn = document.getElementById("feedbackBtn");
-        if(content === ""){
-            alert("输入内容为空~~");
-            return;
-        }
-        if(content.length >= 100){
-            alert("请控制在100字以内");
-            return;
-        }
+    function deleteFeedback(val){
         $.ajax({
             type : "GET",
             dataType : "text",
-            url : "/submitFeedback/",
-            data : {content: content},
-            beforeSend:function (){
-                feedbackBtn.setAttribute("disabled","disabled");
-            },
+            url : "/deleteFeedback/",
+            data : {id: val},
             success : function() {
-                alert("提交成功");
-                feedbackBtn.setAttribute("value","已提交反馈");
+                alert("删除成功");
+                window.location.reload()
             },
             error : function() {
-                alert("提交失败");
-                feedbackBtn.removeAttribute("disabled");
+                alert("异常");
             }
         });
     }

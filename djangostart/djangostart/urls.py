@@ -18,7 +18,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.static import serve
 from message.views import LoginView, logout, reviseKey, startCrawl, taskDetail, musicCrawl, signMap, excelOutput, \
-    excelProcess, priceRange, submitFeedback, deleteTask
+    excelProcess, priceRange, submitFeedback, deleteTask, deleteFeedback
 
 urlpatterns = {
     url(r'^admin/', admin.site.urls),
@@ -36,6 +36,7 @@ urlpatterns = {
     url(r'^priceRange/$', priceRange, name='priceRange'),
     url(r'^submitFeedback/$', submitFeedback, name='submitFeedback'),
     url(r'^deleteTask/$', deleteTask, name='deleteTask'),
+    url(r'^deleteFeedback/$', deleteFeedback, name='deleteFeedback'),
 
 
 

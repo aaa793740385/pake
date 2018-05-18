@@ -5,6 +5,7 @@ import jieba
 import pymongo
 from pyecharts import Bar, Pie
 import requests
+from message.models import CloudMusicInformation
 
 
 import sys
@@ -177,12 +178,11 @@ def startCrawlMusic(star_id,user_id):
             break
         count += 1
     fc.close()
-
     list1 = []
     for i in range(0, 39, 2):
         a = (list[i], list[i + 1])
         list1.append(a)
-    # print list1  # 已经拿到
     plot_chart(star_name, user_id, list1, "Bar")
+    CloudMusicInformation.objects.create(user_id=user_id, star_id=star_id, star_name=star_name)
 
 

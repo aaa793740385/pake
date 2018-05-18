@@ -13,7 +13,7 @@
     APP_PORT            app运行端口，默认5000
 '''
 
-TIMEINTERVAL = 7000
+TIMEINTERVAL = 5000
 POINTINTERVAL = 30
 POINTLENGTH = 2000
 STATS_KEYS = ['downloader/request_count', 'downloader/response_count','downloader/response_status_count/200']

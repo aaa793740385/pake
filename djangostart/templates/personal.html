@@ -31,7 +31,14 @@
                 <li><a href="/assignment/">任务管理</a></li>
                 <li><a href="/crawl/">商品速爬</a></li>
                 <li><a href="/cloudmusic/">明星趣爬</a></li>
+                {% if user.is_superuser == 0%}
                 <li><a href="/feedback/">用户反馈</a></li>
+                {% else %}
+                <li><a href="/checkFeedback/">查看反馈</a></li>
+                {% endif %}
+                {% if user.is_superuser == 1%}
+                <li><a href="http://120.79.204.134:8080/show" target="_blank">数据监控</a></li>
+                {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
@@ -67,6 +74,10 @@
             <h3><strong>爬客生涯</strong></h3>
             <p>累计发布任务：{{task_total}}次</p>
             <p>累计爬取数量：{{detail_total}}次</p>
+            <p>累计明星趣爬：{{musics_total}}次</p>
+            <p>最近感兴趣的明星：{% for i in cloudMusics%}
+            {{i.star_name}}&nbsp;
+            {% endfor %}</p>
         </div>
     </div>
 </div>
